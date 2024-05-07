@@ -24,6 +24,7 @@
 #include <QHBoxLayout>
 #include <QVBoxLayout>
 
+#include "gui/widgets/common/flowlayout.h"
 #include "tagwidget.h"
 
 #define LH_STYLE    (QString(\
@@ -67,7 +68,11 @@
                         "}"\
                     ))
 
-PitchWidget::PitchWidget(const Pitch &pitch, QWidget *parent) : QWidget(parent)
+PitchWidget::PitchWidget(
+    const Pitch &pitch, 
+    Constants::GlossaryStyle glossaryStyle,
+    QWidget *parent
+) : QWidget(parent)
 {
     if (pitch.mora.isEmpty())
     {
@@ -75,26 +80,51 @@ PitchWidget::PitchWidget(const Pitch &pitch, QWidget *parent) : QWidget(parent)
         return;
     }
 
-    QBoxLayout *layoutParent;
-    if (pitch.position.size() > 1)
+    const bool usingVBox = pitch.position.size() > 1 && 
+                           glossaryStyle != Constants::GlossaryStyle::Pipe;
+
+    QLayout *layoutParent;
+    if (usingVBox)
     {
         layoutParent = new QVBoxLayout(this);
     }
     else
     {
-        layoutParent = new QHBoxLayout(this);
+        layoutParent = new FlowLayout(this, 0, 0);
     }
     layoutParent->setContentsMargins(0, 0, 0, 0);
 
-    layoutParent->addWidget(new TagWidget(pitch), 0, Qt::AlignLeft);
+    layoutParent->addWidget(new TagWidget(pitch));
+
+    if(!usingVBox)
+    {
+        QSpacerItem * spacer = new QSpacerItem(
+            6, 0, QSizePolicy::Fixed, QSizePolicy::Fixed);
+        layoutParent->addItem(spacer);
+    }
 
     QString color = palette().color(foregroundRole()).name();
-    for (const uint8_t pos : pitch.position)
+    for (qsizetype i = 0; i < pitch.position.size(); i++)
     {
-        QHBoxLayout *layoutLine = new QHBoxLayout;
-        layoutLine->setContentsMargins(0, 0, 0, 0);
-        layoutLine->setSpacing(0);
-        layoutParent->addLayout(layoutLine);
+        const uint8_t pos = pitch.position[i];
+        QLayout *layoutLine = nullptr;
+        if(usingVBox)
+        {
+            layoutLine = new QHBoxLayout;
+            layoutLine->setContentsMargins(0, 0, 0, 0);
+            layoutLine->setSpacing(0);
+            static_cast<QVBoxLayout*>(layoutParent)->addLayout(layoutLine);
+        }
+        else
+        {
+            layoutLine = layoutParent;
+        }
+
+        if(!usingVBox && i > 0)
+        {
+            QLabel* delimiter = new QLabel(" | ");
+            layoutParent->addWidget(delimiter);
+        }
 
         switch (pos)
         {
@@ -135,9 +165,9 @@ PitchWidget::PitchWidget(const Pitch &pitch, QWidget *parent) : QWidget(parent)
             layoutLine->addWidget(createLabel(text, style));
 
             text.clear();
-            for (size_t i = 1; i < pos; ++i)
+            for (size_t j = 1; j < pos; ++j)
             {
-                text += pitch.mora[i];
+                text += pitch.mora[j];
             }
             if (!text.isEmpty())
             {
@@ -146,9 +176,9 @@ PitchWidget::PitchWidget(const Pitch &pitch, QWidget *parent) : QWidget(parent)
             }
 
             text.clear();
-            for (int i = (int)pos; i < pitch.mora.size(); ++i)
+            for (int j = (int)pos; j < pitch.mora.size(); ++j)
             {
-                text += pitch.mora[i];
+                text += pitch.mora[j];
             }
             if (!text.isEmpty())
             {
@@ -162,7 +192,11 @@ PitchWidget::PitchWidget(const Pitch &pitch, QWidget *parent) : QWidget(parent)
         labelNumber->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
         labelNumber->setText(" [" +QString::number(pos) + "]");
         layoutLine->addWidget(labelNumber);
-        layoutLine->addStretch();
+
+        if(usingVBox)
+        {
+            static_cast<QHBoxLayout*>(layoutLine)->addStretch();
+        }
     }
 }
 

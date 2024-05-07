@@ -24,6 +24,7 @@
 #include <QWidget>
 
 #include "dict/expression.h"
+#include "util/constants.h"
 
 class QLabel;
 
@@ -40,7 +41,11 @@ public:
      * @param pitch  The pitch to display.
      * @param parent The parent of this widget.
      */
-    PitchWidget(const Pitch &pitch, QWidget *parent = nullptr);
+    PitchWidget(
+        const Pitch &pitch, 
+        Constants::GlossaryStyle glossaryStyle, 
+        QWidget *parent = nullptr
+    );
 
 private:
     /**

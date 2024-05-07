@@ -216,7 +216,7 @@ void TermWidget::initUi(
 
     for (const Pitch &pitch : term.pitches)
     {
-        m_layoutPitches->addWidget(new PitchWidget(pitch));
+        m_layoutPitches->addWidget(new PitchWidget(pitch, style));
     }
 
     for (const Tag &termTag : term.tags)
