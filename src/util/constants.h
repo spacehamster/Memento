@@ -182,6 +182,9 @@ namespace Constants
             constexpr const char *LIST_GLOSSARY = "list-result";
             constexpr GlossaryStyle LIST_GLOSSARY_DEFAULT = GlossaryStyle::Bullet;
 
+            constexpr const char *COMPACT_TAGS = "compact-tags";
+            constexpr bool COMPACT_TAGS_DEFAULT = false;
+
             constexpr const char *REPLACE_LINES = "replace-lines";
             constexpr bool REPLACE_LINES_DEFAULT = false;
 

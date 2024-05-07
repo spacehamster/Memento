@@ -50,8 +50,9 @@ public:
     GlossaryWidget(
         size_t number,
         const TermDefinition &def,
+        const QList<Tag> &tags,
         Qt::KeyboardModifier modifier,
-        Constants::GlossaryStyle style,
+        Constants::GlossaryStyle style,        
         QWidget *parent = nullptr);
 
     /**

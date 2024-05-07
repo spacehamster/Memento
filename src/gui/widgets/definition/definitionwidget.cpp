@@ -141,6 +141,10 @@ void DefinitionWidget::initSearch()
             static_cast<int>(Constants::Settings::Search::LIST_GLOSSARY_DEFAULT)
         ).toInt()
     );
+    m_state.compactTags = settings.value(
+        Constants::Settings::Search::COMPACT_TAGS,
+        Constants::Settings::Search::COMPACT_TAGS_DEFAULT
+    ).toBool();
     m_state.autoPlayAudio = settings.value(
         Constants::Settings::Search::AUTO_PLAY_AUDIO,
         Constants::Settings::Search::AUTO_PLAY_AUDIO_DEFAULT

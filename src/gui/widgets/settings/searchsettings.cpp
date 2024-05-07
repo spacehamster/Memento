@@ -167,6 +167,12 @@ void SearchSettings::restoreSaved()
             static_cast<int>(Constants::Settings::Search::LIST_GLOSSARY_DEFAULT)
         ).toInt()
     );
+    m_ui->checkCompactTags->setChecked(
+        settings.value(
+            Constants::Settings::Search::COMPACT_TAGS,
+            Constants::Settings::Search::COMPACT_TAGS_DEFAULT
+        ).toBool()
+    );
     m_ui->lineRemoveRegex->setText(
         settings.value(
             Constants::Settings::Search::REMOVE_REGEX,
@@ -261,6 +267,10 @@ void SearchSettings::applySettings()
     settings.setValue(
         Constants::Settings::Search::LIST_GLOSSARY,
         m_ui->comboGlossaryStyle->currentIndex()
+    );
+    settings.setValue(
+        Constants::Settings::Search::COMPACT_TAGS,
+        m_ui->checkCompactTags->isChecked()
     );
     settings.setValue(
         Constants::Settings::Search::REMOVE_REGEX,

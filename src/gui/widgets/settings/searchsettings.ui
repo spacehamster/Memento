@@ -261,6 +261,13 @@ Changing this value from the default is not recommended.</string>
         </layout>
        </item>
        <item>
+        <widget class="QCheckBox" name="checkCompactTags">
+         <property name="text">
+          <string>Omit tags contained in previous definition</string>
+         </property>
+        </widget>
+       </item>
+       <item>
         <widget class="QLabel" name="labelRemoveRegex">
          <property name="font">
           <font>

@@ -160,14 +160,16 @@ private Q_SLOTS:
 private:
     /**
      * Puts term information into the UI.
-     * @param term     The term to populate the UI with.
-     * @param modifier The modifier key for triggering recursive search.
-     * @param style    The style of the GlossaryWidget.
+     * @param term        The term to populate the UI with.
+     * @param modifier    The modifier key for triggering recursive search.
+     * @param style       The style of the GlossaryWidget.
+     * @param compactTags Whether tags are omitted or not.
      */
     void initUi(
         const Term &term,
         Qt::KeyboardModifier modifier,
-        Constants::GlossaryStyle style);
+        Constants::GlossaryStyle style,
+        bool compactTags);
 
     /**
      * Initializes a new term to add to Anki without audio information.

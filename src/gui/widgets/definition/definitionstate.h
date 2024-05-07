@@ -64,6 +64,9 @@ struct DefinitionState
     /* The style of glossary to display */
     Constants::GlossaryStyle glossaryStyle;
 
+    /* Whether or not to ommit tags contained in previous definition */
+    bool compactTags;
+
     /* Whether or not to auto-play the first result's audio */
     bool autoPlayAudio;
 

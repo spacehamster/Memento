@@ -27,6 +27,7 @@
 GlossaryWidget::GlossaryWidget(
     const size_t number,
     const TermDefinition &def,
+    const QList<Tag> &tags,
     const Qt::KeyboardModifier modifier,
     const Constants::GlossaryStyle style,
     QWidget *parent)
@@ -45,7 +46,7 @@ GlossaryWidget::GlossaryWidget(
 
     m_layoutHeader->addWidget(m_checkBoxAdd);
     m_layoutHeader->addWidget(m_labelNumber);
-    for (const Tag &tag : m_def.tags)
+    for (const Tag &tag : tags)
     {
         m_layoutHeader->addWidget(new TagWidget(tag));
     }
@@ -57,7 +58,7 @@ GlossaryWidget::GlossaryWidget(
         }
         m_layoutHeader->addWidget(new TagWidget(rule));
     }
-    m_layoutHeader->addWidget(new TagWidget(m_def.dictionary));
+    //m_layoutHeader->addWidget(new TagWidget(m_def.dictionary));
 
     m_checkBoxAdd->setChecked(true);
 #if defined(Q_OS_MACOS)

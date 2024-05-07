@@ -123,7 +123,12 @@ TermWidget::TermWidget(
     m_ui->buttonAudio->setIcon(factory->getIcon(IconFactory::Icon::audio));
     m_ui->buttonAudio->setVisible(!m_sources.empty());
 
-    initUi(*term, m_state.searchModifier, m_state.glossaryStyle);
+    initUi(
+        *term,
+        m_state.searchModifier, 
+        m_state.glossaryStyle, 
+        m_state.compactTags
+    );
 
     connect(
         m_ui->buttonCollapse, &QToolButton::clicked,
@@ -185,7 +190,8 @@ void TermWidget::deleteWhenReady()
 void TermWidget::initUi(
     const Term &term,
     Qt::KeyboardModifier modifier,
-    Constants::GlossaryStyle style)
+    Constants::GlossaryStyle style,
+    bool compactTags)
 {
     if (term.reading.isEmpty())
     {
@@ -228,8 +234,39 @@ void TermWidget::initUi(
     QSharedPointer<const AnkiConfig> config = m_client->getConfig();
     for (int i = 0; i < term.definitions.size(); ++i)
     {
+        QList<Tag> displayTags = term.definitions[i].tags;
+        if(compactTags && i > 0)
+        {
+            const QList<Tag> prevTags = term.definitions[i - 1].tags;
+            displayTags = QList<Tag>();
+            std::copy_if(
+                term.definitions[i].tags.begin(), 
+                term.definitions[i].tags.end(), 
+                std::back_inserter(displayTags),
+                [&prevTags](auto val)
+            {
+                return !prevTags.contains(val);
+            });
+        }
+        if(!compactTags || 
+            i == 0 ||
+            (i > 0 && term.definitions[i - 1].dictionary != 
+            term.definitions[i].dictionary))
+        {
+            //It would be cleaner to put a dictionary tag into 
+            //TermDefinition.tags during creation of TermDefinition
+            auto dictionaryTag = Tag {
+                term.definitions[i].dictionary,
+                term.definitions[i].dictionary,
+                "dictionary",
+                "",
+                0,
+                0
+            };
+            displayTags.push_back(dictionaryTag);
+        }
         GlossaryWidget *g = new GlossaryWidget(
-                i + 1, term.definitions[i], modifier, style
+                i + 1, term.definitions[i], displayTags, modifier, style
             );
         g->setChecked(
             !config->excludeGloss.contains(term.definitions[i].dictionary)
