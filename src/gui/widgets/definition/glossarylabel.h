@@ -44,13 +44,6 @@ public:
         QWidget *parent = nullptr);
     virtual ~GlossaryLabel();
 
-    /**
-     * Sets the contents of this label.
-     * @param definitions The definitions to add to this label.
-     * @param basepath    The path where all external resources begin.
-     */
-    void setContents(const QJsonArray &definitions, QString basepath);
-
 public Q_SLOTS:
     /**
      * Deselects all text.
@@ -116,67 +109,6 @@ private Q_SLOTS:
         int length);
 
 private:
-    /**
-     * @brief Adds structured style objects.
-     * @param      obj The structured style object.
-     * @param[out] out The string this style will be appended to.
-     */
-    void addStructuredStyle(const QJsonObject &obj, QString &out) const;
-
-    /**
-     * Adds string structured content.
-     * @param      str The string to add.
-     * @param[out] out The string this string will be appended to.
-     */
-    void addStructuredContentHelper(
-        const QString &str, QString &out) const;
-
-    /**
-     * Adds an array of structured content.
-     * @param      arr      The array of structured content.
-     * @param      basepath The base of the image path.
-     * @param[out] out      The string this content will be appended to.
-     */
-    void addStructuredContentHelper(
-        const QJsonArray &arr, const QString &basepath, QString &out) const;
-
-    /**
-     * Adds an object of structured content.
-     * @param      obj      The object of structured content.
-     * @param      basepath The base of the image path.
-     * @param[out] out      The string this content will be appended to.
-     */
-    void addStructuredContentHelper(
-        const QJsonObject &obj, const QString &basepath, QString &out) const;
-
-    /**
-     * Parses and outputs structured content to HTML.
-     * The root of the structured content add parser.
-     * @param      val      The JSON value of the structured content.
-     * @param      basepath The base of the image path.
-     * @param[out] out      The string this content will be appended to.
-     */
-    void addStructuredContent(
-        const QJsonValue &val, const QString &basepath, QString &out) const;
-
-    /**
-     * Displays an image type object.
-     * @param      obj      The image object.
-     * @param      basepath The base of the image path.
-     * @param[out] out      The string this image will be appended to.
-     */
-    void addImage(
-        const QJsonObject &obj,
-        const QString &basepath,
-        QString &out) const;
-
-    /**
-     * Adds a text object to the HTML document.
-     * @param      obj The text object.
-     * @param[out] out The string the formatted text will be appended to.
-     */
-    void addText(const QJsonObject &obj, QString &out) const;
-
     /* The modifier that triggers searches */
     Qt::KeyboardModifier m_searchModifier = Qt::KeyboardModifier::ShiftModifier;
 

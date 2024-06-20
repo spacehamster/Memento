@@ -17,6 +17,8 @@ add_library(
     termwidget.cpp
     termwidget.h
     termwidget.ui
+    widgetglossarybuilder.cpp
+    widgetglossarybuilder.h
 )
 target_compile_features(definitionwidget PUBLIC cxx_std_17)
 target_compile_options(definitionwidget PRIVATE ${MEMENTO_COMPILER_FLAGS})

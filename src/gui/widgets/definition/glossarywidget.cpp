@@ -21,6 +21,7 @@
 #include "glossarywidget.h"
 
 #include "tagwidget.h"
+#include "widgetglossarybuilder.h"
 
 #include "util/utils.h"
 
@@ -34,7 +35,7 @@ GlossaryWidget::GlossaryWidget(
       m_def(def)
 {
     m_parentLayout  = new QVBoxLayout(this);
-    m_layoutHeader  = new FlowLayout(-1, 6);
+    m_layoutHeader  = new FlowLayout(-1, 4);
     m_checkBoxAdd   = new QCheckBox;
     m_labelNumber   = new QLabel;
     m_glossaryLabel = new GlossaryLabel(modifier, style);
@@ -70,10 +71,42 @@ GlossaryWidget::GlossaryWidget(
 
     m_labelNumber->setText(QString::number(number) + ".");
 
-    m_glossaryLabel->setContents(
-        m_def.glossary,
-        DirectoryUtils::getDictionaryResourceDir() + SLASH + m_def.dictionary
-    );
+    QString glossaryHtml;
+    QStringList compactGlossary;
+    WidgetGlossaryBuilder::buildGlossary(
+        m_def.glossary, 
+        DirectoryUtils::getDictionaryResourceDir() + SLASH + m_def.dictionary,
+        style,
+        glossaryHtml,
+        compactGlossary);
+    
+    for(int i = 0; i < compactGlossary.size(); i++)
+    {
+        if(i > 0)
+        {
+            m_layoutHeader->addWidget(new QLabel("|"));
+        }
+        QStringList compactWords = compactGlossary[i].split(' ');
+        for(const QString &word : compactWords)
+        {
+            QLabel *compactLabel = new QLabel(word);
+            compactLabel->setMaximumWidth(400);
+            if(word.size() > 50)
+            {
+                compactLabel->setWordWrap(true);
+            }
+            m_layoutHeader->addWidget(compactLabel);
+        }
+    }
+    if(glossaryHtml.isEmpty())
+    {
+        m_glossaryLabel->hide();
+    }
+    else 
+    {
+        m_glossaryLabel->setHtml(glossaryHtml);
+    }
+    
     connect(
         m_glossaryLabel, &GlossaryLabel::contentSearched,
         this, &GlossaryWidget::contentSearched
